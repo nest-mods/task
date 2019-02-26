@@ -58,7 +58,7 @@ import { of } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { Log } from '@nest-mods/log';
 
-let globalResult: any = {};
+const globalResult: any = {};
 
 @Injectable()
 class Schedules {

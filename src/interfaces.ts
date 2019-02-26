@@ -50,58 +50,61 @@
  *          ┗┻┛    ┗┻┛+ + + +
  * ----------- 永 无 BUG ------------
  */
-import { Redis, RedisOptions } from 'ioredis';
-import { ModuleMetadata } from '@nestjs/common/interfaces';
-import { Priority } from './patches';
+import {Redis, RedisOptions} from 'ioredis';
+import {ModuleMetadata} from '@nestjs/common/interfaces';
+import {Priority} from './patches';
+import {DoneCallback, Job} from 'kue';
 
 export interface RedisClientFactoryOptions {
-  createClientFactory: (options?: RedisOptions) => Redis;
+    createClientFactory: (options?: RedisOptions) => Redis;
 }
 
 export interface TaskMetadata {
-  name?: string;
-  unique?: boolean;
-  queue?: string;
-  concurrency?: number;
-  priority?: Priority;
-  ttl?: number;
-  attempts?: number;
-  backoff?: (attempts: number, delay: number) => number | { delay?: number, type: string } | boolean;
+    name?: string;
+    unique?: boolean;
+    queue?: string;
+    concurrency?: number;
+    priority?: Priority;
+    ttl?: number;
+    attempts?: number;
+    backoff?: (attempts: number, delay: number) => number | { delay?: number, type: string } | boolean;
 }
 
 export interface ScheduleMetadata extends TaskMetadata {
-  schedule: string;
-  scheduleType?: 'interval' | 'when' | 'now';
-  env?: string[];
-  data?: object;
+    schedule: string;
+    scheduleType?: 'interval' | 'when' | 'now';
+    env?: string[];
+    data?: object;
 }
 
 export interface TaskProperties {
-  task: (job, done) => void;
-  metadata: TaskMetadata | ScheduleMetadata;
+    task: (job, done) => void;
+    metadata: TaskMetadata | ScheduleMetadata;
 }
 
 export interface TaskModuleOptions {
-  prefix?: string;
-  redis?: RedisClientFactoryOptions | RedisOptions | string;
-  concurrency?: number;
-  /**
-   * restore:boolean - tells kue-scheduler to try to restore schedules in case of restarts or other causes.
-   * By default its not enable. When enable use restore error and restore success queue events to communicate with the scheduler.
-   */
-  restore?: boolean;
-  /**
-   * worker:boolean - tells kue-scheduler to listen and process job. Default to true.
-   * If set to false you need another kue-scheduler instance to process the scheduled jobs from other process
-   */
-  worker?: boolean;
-  /**
-   * skipConfig:boolean - tells kue-scheduler to skip enabling enabling key expiry notification.
-   */
-  skipConfig?: boolean;
+    prefix?: string;
+    redis?: RedisClientFactoryOptions | RedisOptions | string;
+    concurrency?: number;
+    /**
+     * restore:boolean - tells kue-scheduler to try to restore schedules in case of restarts or other causes.
+     * By default its not enable. When enable use restore error and restore success queue events to communicate with the scheduler.
+     */
+    restore?: boolean;
+    /**
+     * worker:boolean - tells kue-scheduler to listen and process job. Default to true.
+     * If set to false you need another kue-scheduler instance to process the scheduled jobs from other process
+     */
+    worker?: boolean;
+    /**
+     * skipConfig:boolean - tells kue-scheduler to skip enabling enabling key expiry notification.
+     */
+    skipConfig?: boolean;
 }
 
 export interface TaskModuleAsyncOptions extends Pick<ModuleMetadata, 'imports'> {
-  useFactory?: (...args: any[]) => Promise<TaskModuleOptions> | TaskModuleOptions;
-  inject?: any[];
+    useFactory?: (...args: any[]) => Promise<TaskModuleOptions> | TaskModuleOptions;
+    inject?: any[];
 }
+
+export type TaskFnType = (job: Job, done: DoneCallback) => any | void;

@@ -26,7 +26,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { FancyLoggerService } from '../fancy-logger/fancy-logger.service';
 import { Controller } from '@nestjs/common/interfaces';
 import * as kue from 'kue';
-import { ScheduleMetadata, TaskMetadata, TaskModuleOptions } from '../../interfaces';
+import {TaskFnType, ScheduleMetadata, TaskMetadata, TaskModuleOptions} from '../../interfaces';
 import { TASK_CONFIGURATION_METADATA, TASK_MODULE_OPTIONS } from '../../constants';
 import { InvalidScheduleException } from '../../errors/invalid-schedule.exception';
 import * as _ from 'lodash';
@@ -55,8 +55,8 @@ export class KueService {
     this.queues[KueService.DEFAULT_QUEUE_NAME] = this.createQueue(KueService.DEFAULT_QUEUE_NAME);
   }
 
-  registerTask(task: (job, done) => void, metadata: TaskMetadata, ctrl: Controller) {
-    let concurrency: number = metadata.concurrency || this.config.concurrency;
+  registerTask(task: TaskFnType, metadata: TaskMetadata, ctrl: Controller) {
+    const concurrency: number = metadata.concurrency || this.config.concurrency;
     const q = this.getQueue(metadata.queue || KueService.DEFAULT_QUEUE_NAME);
     q.process(KueService.JOB_PREFIX + metadata.name, concurrency, async (j, d) => {
       try {
@@ -67,8 +67,8 @@ export class KueService {
     });
   }
 
-  registerSchedule(task: (job, done) => void, metadata: ScheduleMetadata, ctrl: Controller) {
-    let concurrency: number = metadata.concurrency || this.config.concurrency;
+  registerSchedule(task: TaskFnType, metadata: ScheduleMetadata, ctrl: Controller) {
+    const concurrency: number = metadata.concurrency || this.config.concurrency;
     const q = this.getQueue(metadata.queue || KueService.SCHEDULE_QUEUE_NAME);
     q.process(KueService.SCHEDULE_PREFIX + metadata.name, concurrency, async (j, d) => {
       try {
@@ -79,28 +79,28 @@ export class KueService {
     });
   }
 
-  buildJob(task: Function, data: object): kue.Job {
-    let metadata: TaskMetadata = Reflect.getMetadata(TASK_CONFIGURATION_METADATA, task);
-    let queue: kue.Queue = this.getQueue(metadata.queue);
+  buildJob(task: TaskFnType, data: object): kue.Job {
+    const metadata: TaskMetadata = Reflect.getMetadata(TASK_CONFIGURATION_METADATA, task);
+    const queue: kue.Queue = this.getQueue(metadata.queue);
 
-    let job: kue.Job = queue.createJob(KueService.JOB_PREFIX + metadata.name, data);
+    const job: kue.Job = queue.createJob(KueService.JOB_PREFIX + metadata.name, data);
     this.buildJobWithMetadata(job, metadata);
     return job;
   }
 
-  createJob(task: Function, data: object) {
+  createJob(task: TaskFnType, data: object) {
     return this.buildJob(task, data).save();
   }
 
-  buildSchedule(task: Function, data: object): kue.Job {
-    let metadata: ScheduleMetadata = Reflect.getMetadata(TASK_CONFIGURATION_METADATA, task);
-    let queue: kue.Queue = this.getQueue(metadata.queue || KueService.SCHEDULE_QUEUE_NAME);
+  buildSchedule(task: TaskFnType, data: object): kue.Job {
+    const metadata: ScheduleMetadata = Reflect.getMetadata(TASK_CONFIGURATION_METADATA, task);
+    const queue: kue.Queue = this.getQueue(metadata.queue || KueService.SCHEDULE_QUEUE_NAME);
 
     if (_.isArray(metadata.env) && !_.includes(metadata.env, process.env.NODE_ENV)) {
       return this.createEmptyJob();
     }
 
-    let job: kue.Job = queue.createJob(KueService.SCHEDULE_PREFIX + metadata.name, data);
+    const job: kue.Job = queue.createJob(KueService.SCHEDULE_PREFIX + metadata.name, data);
     this.buildJobWithMetadata(job, metadata);
 
     switch (metadata.scheduleType) {
@@ -120,7 +120,7 @@ export class KueService {
     return job;
   }
 
-  createSchedule(task: Function, data: object) {
+  createSchedule(task: TaskFnType, data: object) {
     return this.buildSchedule(task, data).save();
   }
 
@@ -170,7 +170,7 @@ export class KueService {
   }
 
   private createQueue(queueName: string): kue.Queue {
-    let queue: kue.Queue = kue.createQueue(this.config);
+    const queue: kue.Queue = kue.createQueue(this.config);
     queue.setMaxListeners(0);
 
     if (!this.debugActive &&
@@ -184,7 +184,7 @@ export class KueService {
   }
 
   private bindDebugQueueEvents(queue: kue.Queue) {
-    for (let event of KueService.DEBUG_EVENTS) {
+    for (const event of KueService.DEBUG_EVENTS) {
       queue.on(event, (id) => {
         kue.Job.get(id, (err, job: kue.Job) => {
           if (job) {
@@ -204,7 +204,7 @@ export class KueService {
   }
 
   private debugLog(job: kue.Job, event: string, err?) {
-    let log: string = `Task ${job.type} ${event} `;
+    const log: string = `Task ${job.type} ${event} `;
     this.fancyLogger.debug('TaskModule', log, 'TaskRunner', err);
   }
 }
