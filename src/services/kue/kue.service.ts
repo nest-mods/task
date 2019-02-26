@@ -32,6 +32,11 @@ import { InvalidScheduleException } from '../../errors/invalid-schedule.exceptio
 import * as _ from 'lodash';
 import yn from 'yn';
 
+/**
+ * @author erickponce
+ * @author artjomzab
+ * @author Diluka
+ */
 @Injectable()
 export class KueService {
   public static readonly JOB_PREFIX: string = 'tasks:';

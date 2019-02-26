@@ -29,6 +29,10 @@ import { FancyLoggerService } from '../fancy-logger/fancy-logger.service';
 import { KueService } from './kue.service';
 import { ScheduleMetadata } from '../../interfaces';
 
+/**
+ * @author erickponce
+ * @author Diluka
+ */
 @Injectable()
 export class KueTaskRegisterService {
   private readonly moduleName: string = 'TaskModule';

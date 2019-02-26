@@ -27,6 +27,10 @@ import { TASK_CONFIGURATION_METADATA, TASK_METADATA } from '../constants';
 import { TaskMetadata } from '../interfaces';
 import * as _ from 'lodash';
 
+/**
+ * @author erickponce
+ * @author Diluka
+ */
 export const Task = (metadata?: TaskMetadata): MethodDecorator => {
   return (target: any, key, descriptor: PropertyDescriptor) => {
     const methodSign = `${target.name || target.constructor.name}#${key as any}`;

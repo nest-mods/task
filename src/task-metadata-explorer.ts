@@ -34,6 +34,10 @@ export enum TaskType {
   SCHEDULE = 'schedule',
 }
 
+/**
+ * @author erickponce
+ * @author Diluka
+ */
 export class TaskMetadataExplorer {
   constructor(private metadataScanner: MetadataScanner) {
   }

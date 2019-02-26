@@ -25,6 +25,10 @@
 import {Injectable, LoggerService} from '@nestjs/common';
 import {Log} from '@nest-mods/log';
 
+/**
+ * @author erickponce
+ * @author Diluka
+ */
 @Injectable()
 export class FancyLoggerService {
     @Log() private logger: LoggerService;
