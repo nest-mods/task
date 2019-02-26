@@ -1,31 +1,64 @@
 {
-  "name": "nestjs-kue",
-  "version": "0.2.0",
-  "description": "Kue wrapper for NestJS framework",
-  "author": "Erick Ponce Leão <erickponceleao@gmail.com>",
-  "license": "MIT",
-  "repository": "git://github.com/erickponce/nestjs-kue",
+  "name": "@nest-mods/task",
+  "version": "0.0.1",
+  "description": "background task and scheduled job powered by kue and kue-schedule for nest.js",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
-    "compile": "tsc -p tsconfig.json"
+    "test": "jest",
+    "build": "tsc -p tsconfig.build.json",
+    "clean": "rimraf dist",
+    "lint": "tslint -p tsconfig.json -c tslint.json",
+    "prepare": "npm run clean && npm run build"
   },
-  "dependencies": {
-    "@nestjs/common": "^5.0.0",
-    "@nestjs/core": "^5.0.0",
-    "cli-color": "^1.2.0",
-    "kue": "^0.11.6"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nest-mods/task.git"
   },
+  "author": "Diluka",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nest-mods/task/issues"
+  },
+  "homepage": "https://github.com/nest-mods/task#readme",
   "peerDependencies": {
-    "@nestjs/core": "~5.*",
-    "@nestjs/common": "~5.*",
+    "@nest-mods/log": "*",
+    "@nestjs/common": ">=5",
+    "@nestjs/core": ">=5",
+    "ioredis": ">=4",
+    "lodash": ">=4",
+    "kue": ">=0.11",
+    "kue-scheduler": ">=0.8",
     "reflect-metadata": "^0.1.12"
   },
   "devDependencies": {
-    "@types/kue": "^0.11.7",
-    "@types/reflect-metadata": "^0.1.0",
-    "gulp": "^3.9.1",
-    "gulp-typescript": "^3.2.2",
-    "gulp-watch": "^4.3.11",
-    "tslint-eslint-rules": "^4.1.1",
-    "typescript": "^3.0.3"
+    "@nest-mods/log": "0.0.3",
+    "@nestjs/common": "^5.7.3",
+    "@nestjs/core": "^5.7.3",
+    "@nestjs/testing": "^5.7.3",
+    "@types/jest": "^24.0.9",
+    "@types/kue": "^0.11.10",
+    "@types/lodash": "^4.14.121",
+    "@types/node": "^11.9.5",
+    "@types/supertest": "^2.0.7",
+    "@types/yn": "^3.0.0",
+    "ioredis": "^4.6.2",
+    "jest": "^24.1.0",
+    "kue": "^0.11.6",
+    "kue-scheduler": "^0.8.1",
+    "lodash": "^4.17.11",
+    "reflect-metadata": "^0.1.13",
+    "rxjs": "^6.4.0",
+    "supertest": "^3.4.2",
+    "ts-jest": "^24.0.0",
+    "ts-loader": "^5.3.3",
+    "ts-node": "^8.0.2",
+    "tslint": "^5.13.0",
+    "typescript": "^3.3.3333",
+    "winston": "^3.2.1"
+  },
+  "dependencies": {
+    "tslib": "^1.9.3",
+    "yn": "^3.0.0"
   }
 }
