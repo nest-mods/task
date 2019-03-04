@@ -100,6 +100,11 @@ export interface TaskModuleOptions {
      * skipConfig:boolean - tells kue-scheduler to skip enabling enabling key expiry notification.
      */
     skipConfig?: boolean;
+    /**
+     * **WARNING**: If set to TRUE. It will **DELETE ALL** the data in given redis client's selected database.
+     * resolve the problem caused by previous job data make schedules forever hangup
+     */
+    flushdbOnStart?: boolean;
 }
 
 export interface TaskModuleAsyncOptions extends Pick<ModuleMetadata, 'imports'> {
