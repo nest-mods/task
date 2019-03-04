@@ -22,13 +22,13 @@
  * SOFTWARE.
  */
 
-import { Inject, Injectable } from '@nestjs/common';
-import { FancyLoggerService } from '../fancy-logger/fancy-logger.service';
-import { Controller } from '@nestjs/common/interfaces';
+import {Inject, Injectable} from '@nestjs/common';
+import {FancyLoggerService} from '../fancy-logger/fancy-logger.service';
+import {Controller} from '@nestjs/common/interfaces';
 import * as kue from 'kue';
-import {TaskFnType, ScheduleMetadata, TaskMetadata, TaskModuleOptions} from '../../interfaces';
-import { TASK_CONFIGURATION_METADATA, TASK_MODULE_OPTIONS } from '../../constants';
-import { InvalidScheduleException } from '../../errors/invalid-schedule.exception';
+import {ScheduleMetadata, TaskFnType, TaskMetadata, TaskModuleOptions} from '../../interfaces';
+import {TASK_CONFIGURATION_METADATA, TASK_MODULE_OPTIONS} from '../../constants';
+import {InvalidScheduleException} from '../../errors/invalid-schedule.exception';
 import * as _ from 'lodash';
 import yn from 'yn';
 
@@ -64,9 +64,12 @@ export class KueService {
     const concurrency: number = metadata.concurrency || this.config.concurrency;
     const q = this.getQueue(metadata.queue || KueService.DEFAULT_QUEUE_NAME);
     q.process(KueService.JOB_PREFIX + metadata.name, concurrency, async (j, d) => {
+      this.fancyLogger.info('TaskModule', `Task [${metadata.name}] invoked.`, 'Task');
       try {
         await Promise.resolve(task.call(ctrl, j, d));
+        this.fancyLogger.info('TaskModule', `Task [${metadata.name}] finished.`, 'Task');
       } catch (err) {
+        this.fancyLogger.info('TaskModule', `Task [${metadata.name}] failed. Error: ${err.message}`, 'Task');
         d(err);
       }
     });
@@ -76,9 +79,12 @@ export class KueService {
     const concurrency: number = metadata.concurrency || this.config.concurrency;
     const q = this.getQueue(metadata.queue || KueService.SCHEDULE_QUEUE_NAME);
     q.process(KueService.SCHEDULE_PREFIX + metadata.name, concurrency, async (j, d) => {
+      this.fancyLogger.info('TaskModule', `Schedule [${metadata.name}] invoked.`, 'Schedule');
       try {
         await Promise.resolve(task.call(ctrl, j, d));
+        this.fancyLogger.info('TaskModule', `Schedule [${metadata.name}] finished.`, 'Schedule');
       } catch (err) {
+        this.fancyLogger.info('TaskModule', `Schedule [${metadata.name}] failed. Error: ${err.message}`, 'Schedule');
         d(err);
       }
     });

@@ -1,6 +1,6 @@
 {
   "name": "@nest-mods/task",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "background task and scheduled job powered by kue and kue-schedule for nest.js",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
