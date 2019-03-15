@@ -1,6 +1,6 @@
 {
   "name": "@nest-mods/task",
-  "version": "0.0.3",
+  "version": "1.0.0",
   "description": "background task and scheduled job powered by kue and kue-schedule for nest.js",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -47,6 +47,7 @@
     "kue": "^0.11.6",
     "kue-scheduler": "^0.8.1",
     "lodash": "^4.17.11",
+    "prettier": "^1.16.4",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^6.4.0",
     "supertest": "^3.4.2",

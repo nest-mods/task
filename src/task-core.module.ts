@@ -58,7 +58,6 @@ import * as _ from 'lodash';
 import { KueService } from './services/kue/kue.service';
 import { KueTaskRegisterService } from './services/kue/kue-task-register.service';
 import { FancyLoggerService } from './services/fancy-logger/fancy-logger.service';
-import { LogModule } from '@nest-mods/log';
 
 const defaultOptions: TaskModuleOptions = {
   prefix: 'q',
@@ -70,7 +69,6 @@ const defaultOptions: TaskModuleOptions = {
 
 @Global()
 @Module({
-  imports: [LogModule],
   providers: [
     KueService,
     KueTaskRegisterService,
