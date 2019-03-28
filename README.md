@@ -3,4 +3,4 @@
 
 background task and scheduled job powered by kue and kue-scheduler for nest.js
 
-install via npm `npm i @nest-mods/task`
+install via npm `npm i @nest-mods/task @nest-mods/log ioredis lodash kue kue-scheduler`
